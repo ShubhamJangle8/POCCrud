@@ -2,6 +2,7 @@ package com.ikea.resourceallocation.requestscrud.conversion;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.ikea.resourceallocation.requestscrud.dto.RequestCreationResponseDto;
 import com.ikea.resourceallocation.requestscrud.model.Request;
@@ -11,8 +12,9 @@ public class EntityDtoConversion {
 	public RequestCreationResponseDto EntityToDtoConvertion(Request req, String message) {
 		
 		List<String> tags = Arrays.asList(req.getTags().split(","))
-        .stream()
-        .map(String::trim).toList();
+		        .stream()
+		        .map(String::trim)
+		        .collect(Collectors.toList());;
         
 		RequestCreationResponseDto request = 
 				new RequestCreationResponseDto.RequestCreationResponseDtoBuilder()
