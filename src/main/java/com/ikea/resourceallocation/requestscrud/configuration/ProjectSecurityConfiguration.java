@@ -27,7 +27,7 @@ public class ProjectSecurityConfiguration extends WebSecurityConfigurerAdapter {
 			@Override
 			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 				CorsConfiguration config = new CorsConfiguration();
-				String[] origins = { "http://ec2-18-216-203-164.us-east-2.compute.amazonaws.com:3000", "http://localhost:3000", "http://3.142.49.81:8080" };
+				String[] origins = { "http://ec2-18-216-203-164.us-east-2.compute.amazonaws.com:3000", "http://localhost:3000", "http://3.142.49.81:8081" };
 				List<String> originLi = new ArrayList<>(Arrays.asList(origins));
 				config.setAllowedOrigins(originLi);
 				config.setAllowedMethods(Collections.singletonList("*"));
