@@ -58,18 +58,29 @@ public class RequestController {
 //	}
 
 	@PostMapping("/getAll")
-	public ResponseEntity<List<RequestsForListPageDto>> getAllRequestsWithFilter(
-			@RequestBody RequestFilterCriteria criteria) {
-		System.out.println(criteria);
-		List<RequestsForListPageDto> allRequestsForListPage = requestService.getAllRequestsWithFilters(criteria);
-		return new ResponseEntity<>(allRequestsForListPage, HttpStatus.OK);
-	}
+    public ResponseEntity<List<RequestsForListPageDto>> getAllRequestsWithFilter(
+            @RequestBody RequestFilterCriteria criteria,
+            HttpServletResponse response) {
+        System.out.println(criteria);
+        List<RequestsForListPageDto> allRequestsForListPage = requestService.getAllRequestsWithFilters(criteria);
+        if (allRequestsForListPage == null || allRequestsForListPage.isEmpty()) {
+            response.addHeader("WWW-Authenticate", "Basic realm=\"my-realm\"");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } else {
+            return new ResponseEntity<>(allRequestsForListPage, HttpStatus.OK);
+        }
+    }
 
 	@GetMapping("/get/{reqId}")
-	public ResponseEntity<RequestCreationResponseDto> getRequestById(@PathVariable String reqId) {
+	public ResponseEntity<RequestCreationResponseDto> getRequestById(@PathVariable String reqId, HttpServletResponse response) {
 		RequestCreationResponseDto requestCreationResponseDto = requestService.getRequestById(reqId);
 		System.out.println(reqId);
-		return new ResponseEntity<>(requestCreationResponseDto, HttpStatus.OK);
+		if (requestCreationResponseDto == null) {
+            response.addHeader("WWW-Authenticate", "Basic realm=\"my-realm\"");
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } else {
+            return new ResponseEntity<>(requestCreationResponseDto, HttpStatus.OK);
+        }
 	}
 
 	@GetMapping("/get/{reqId}/copy")
@@ -111,7 +122,6 @@ public class RequestController {
 		response.setContentType("application/pdf");
         DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
         String currentDateTime = dateFormatter.format(new Date());
-         
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=users_" + currentDateTime + ".pdf";
         response.setHeader(headerKey, headerValue);
